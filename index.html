@@ -104,4 +104,21 @@
 <h3 class="code-line" data-line-start="99" data-line-end="100"><a id="_99"></a>エラーについて</h3>
 <p class="has-line-data" data-line-start="100" data-line-end="101">ユーザが署名を拒否すると以下を返します</p>
 <p class="has-line-data" data-line-start="102" data-line-end="103"><code>{callback}?error=sign_rejected</code></p>
+<h3 class="code-line" data-line-start="104" data-line-end="105"><a id="_104"></a>署名の検証について</h3>
+<h4 class="code-line" data-line-start="106" data-line-end="107"><a id="_106"></a>トランザクションの検証</h4>
+<p class="has-line-data" data-line-start="107" data-line-end="108">v3系の場合</p>
+<pre><code class="has-line-data" data-line-start="109" data-line-end="117" class="language-javascript"><span class="hljs-comment">// 返ってきた公開鍵とトランザクションの公開鍵が一致するかどうか</span>
+<span class="hljs-keyword">const</span> publicKey = <span class="hljs-keyword">new</span> symbolSdk.PublicKey(<span class="hljs-string">"PUBLIC_KEY"</span>);
+<span class="hljs-keyword">const</span> tx = symbolSdk.symbol.TransactionFactory.deserialize(symbolSdk.utils.hexToUint8(payload));
+<span class="hljs-built_in">console</span>.log(symbolSdk.utils.uint8ToHex(tx.signerPublicKey.bytes) == symbolSdk.utils.uint8ToHex(publicKey.bytes));
+
+<span class="hljs-comment">// トランザクションの検証</span>
+<span class="hljs-built_in">console</span>.log(facade.verifyTransaction(tx, tx.signature));
+</code></pre>
+<h4 class="code-line" data-line-start="118" data-line-end="119"><a id="_118"></a>その他署名の検証</h4>
+<p class="has-line-data" data-line-start="119" data-line-end="120">v3系の場合</p>
+<pre><code class="has-line-data" data-line-start="121" data-line-end="125" class="language-javascript"><span class="hljs-keyword">const</span> publicKey = <span class="hljs-keyword">new</span> symbolSdk.PublicKey(<span class="hljs-string">"PUBLIC_KEY"</span>);
+<span class="hljs-keyword">const</span> verifier = <span class="hljs-keyword">new</span> facade.constructor.Verifier(publicKey);
+<span class="hljs-built_in">console</span>.log(verifier.verify(<span class="hljs-string">"test"</span>, signature));
+</code></pre>
 </body></html>

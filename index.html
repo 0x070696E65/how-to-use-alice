@@ -119,6 +119,6 @@
 <p class="has-line-data" data-line-start="119" data-line-end="120">v3系の場合</p>
 <pre><code class="has-line-data" data-line-start="121" data-line-end="125" class="language-javascript"><span class="hljs-keyword">const</span> publicKey = <span class="hljs-keyword">new</span> symbolSdk.PublicKey(<span class="hljs-string">"PUBLIC_KEY"</span>);
 <span class="hljs-keyword">const</span> verifier = <span class="hljs-keyword">new</span> facade.constructor.Verifier(publicKey);
-<span class="hljs-built_in">console</span>.log(verifier.verify(<span class="hljs-string">"test"</span>, signature));
+<span class="hljs-built_in">console</span>.log(verifier.verify(original_data, signature));
 </code></pre>
 </body></html>

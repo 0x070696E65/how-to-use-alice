@@ -48,32 +48,33 @@
 </tr>
 <tr>
 <td>redirect_url</td>
-<td><a href="https://google.com">https://google.com</a></td>
+<td>これらをhexにする (<a href="https://google.com">https://google.com</a>)</td>
 </tr>
 </tbody>
 </table>
 <p class="has-line-data" data-line-start="29" data-line-end="31">ex)<br>
 <code>alice://sign?data={data}&amp;type={request_type}&amp;callback={callbackURL}</code></p>
 <h3 class="code-line" data-line-start="32" data-line-end="33"><a id="POST_32"></a>POST通信</h3>
-<p class="has-line-data" data-line-start="33" data-line-end="36"><code>&amp;method=post</code>を与えてやるとPOSTにて送信します。<br>
+<p class="has-line-data" data-line-start="33" data-line-end="37"><code>&amp;method=post</code>を与えてやるとPOSTにて送信します。<br>
 その際は、aLiceの画面に留まるため<br>
-<code>&amp;redirect_url={redirect_url}</code>を追加してやると画面が遷移します。<code>redirect_url</code>にパラメータを追加するとそのまま遷移するので<code>token</code>などの受け渡しに使えるかと思います。</p>
-<p class="has-line-data" data-line-start="37" data-line-end="38">postの場合は以下のようなJSONをBodyに含め送信します</p>
-<pre><code class="has-line-data" data-line-start="39" data-line-end="45" class="language-javascript">{
+<code>&amp;redirect_url={redirect_url}</code>を追加してやると画面が遷移します。<code>redirect_url</code>にパラメータを追加するとそのまま遷移するので<code>token</code>などの受け渡しに使えるかと思います。<br>
+※redirect_urlもutf8をhexにして渡してください</p>
+<p class="has-line-data" data-line-start="38" data-line-end="39">postの場合は以下のようなJSONをBodyに含め送信します</p>
+<pre><code class="has-line-data" data-line-start="40" data-line-end="46" class="language-javascript">{
     <span class="hljs-string">"pubkey"</span>: <span class="hljs-string">"PUBLIC_KEY"</span>,
     <span class="hljs-string">"original_data"</span>: <span class="hljs-string">"ORIGINAL_DATA"</span>,
     <span class="hljs-string">"signature"</span>: <span class="hljs-string">"SIGNATURE"</span>
 }
 </code></pre>
-<h3 class="code-line" data-line-start="46" data-line-end="47"><a id="callbackUrl_46"></a>callbackUrl</h3>
-<p class="has-line-data" data-line-start="47" data-line-end="49">ここに設定したURLに遷移（もしくはPOST送信）します。<br>
+<h3 class="code-line" data-line-start="47" data-line-end="48"><a id="callbackUrl_47"></a>callbackUrl</h3>
+<p class="has-line-data" data-line-start="48" data-line-end="50">ここに設定したURLに遷移（もしくはPOST送信）します。<br>
 ただし、これらは16進数にエンコードしてください</p>
-<pre><code class="has-line-data" data-line-start="50" data-line-end="53" class="language-javascript"><span class="hljs-keyword">const</span> callback = <span class="hljs-string">`sample://callback/param1=test`</span>;
+<pre><code class="has-line-data" data-line-start="51" data-line-end="54" class="language-javascript"><span class="hljs-keyword">const</span> callback = <span class="hljs-string">`sample://callback/param1=test`</span>;
 <span class="hljs-keyword">const</span> url = <span class="hljs-string">`alice://sign?data=<span class="hljs-subst">${transferTransaction.serialize()}</span>&amp;type=request_sign_transaction&amp;callback=<span class="hljs-subst">${Convert.uint8ToHex(callback)}</span>`</span>;
 </code></pre>
-<h3 class="code-line" data-line-start="54" data-line-end="55"><a id="request_sign_transaction_54"></a>request_sign_transaction</h3>
-<p class="has-line-data" data-line-start="55" data-line-end="56">Symbolのトランザクションペイロードに署名します。</p>
-<pre><code class="has-line-data" data-line-start="57" data-line-end="73" class="language-javascript"><span class="hljs-keyword">const</span> transaction = facade.transactionFactory.create({
+<h3 class="code-line" data-line-start="55" data-line-end="56"><a id="request_sign_transaction_55"></a>request_sign_transaction</h3>
+<p class="has-line-data" data-line-start="56" data-line-end="57">Symbolのトランザクションペイロードに署名します。</p>
+<pre><code class="has-line-data" data-line-start="58" data-line-end="74" class="language-javascript"><span class="hljs-keyword">const</span> transaction = facade.transactionFactory.create({
     type: <span class="hljs-string">'transfer_transaction_v1'</span>,
     signerPublicKey: aliceKeyPair.publicKey,
     recipientAddress: <span class="hljs-string">'BOB_PLAIN_ADDRESS'</span>,
@@ -89,18 +90,18 @@
 });
 <span class="hljs-keyword">const</span> payload = symbolSdk.utils.uint8ToHex(transaction.serialize());
 </code></pre>
-<p class="has-line-data" data-line-start="73" data-line-end="74"><code>alice://sign?type=request_sign_transaction&amp;data={payload}&amp;callback={callbackURL}</code></p>
-<p class="has-line-data" data-line-start="75" data-line-end="76">sdk v2系の場合はhexへのコンバートは不要です</p>
-<pre><code class="has-line-data" data-line-start="77" data-line-end="80" class="language-javascript"><span class="hljs-comment">// v2</span>
+<p class="has-line-data" data-line-start="74" data-line-end="75"><code>alice://sign?type=request_sign_transaction&amp;data={payload}&amp;callback={callbackURL}</code></p>
+<p class="has-line-data" data-line-start="76" data-line-end="77">sdk v2系の場合はhexへのコンバートは不要です</p>
+<pre><code class="has-line-data" data-line-start="78" data-line-end="81" class="language-javascript"><span class="hljs-comment">// v2</span>
 <span class="hljs-keyword">const</span> payload = transaction.serialize();
 </code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="81" data-line-end="82">Note: トランザクションのSignerPublicKeyはユーザが設定しているメインアカウントの公開鍵が自動的に設定されます。</p>
+<p class="has-line-data" data-line-start="82" data-line-end="83">Note: トランザクションのSignerPublicKeyはユーザが設定しているメインアカウントの公開鍵が自動的に設定されます。</p>
 </blockquote>
-<p class="has-line-data" data-line-start="83" data-line-end="84">以下をCallbackURLに返します。</p>
-<p class="has-line-data" data-line-start="85" data-line-end="86"><code>{callbackUrl}?signed_payload={signedPayload}&amp;pubkey={publicKey}&amp;original_data={data}</code></p>
-<p class="has-line-data" data-line-start="87" data-line-end="88">signedPayloadは以下のように扱います</p>
-<pre><code class="has-line-data" data-line-start="89" data-line-end="100" class="language-javascript"><span class="hljs-comment">// v2 v2系では一度再構築しなおす必要があります</span>
+<p class="has-line-data" data-line-start="84" data-line-end="85">以下をCallbackURLに返します。</p>
+<p class="has-line-data" data-line-start="86" data-line-end="87"><code>{callbackUrl}?signed_payload={signedPayload}&amp;pubkey={publicKey}&amp;original_data={data}</code></p>
+<p class="has-line-data" data-line-start="88" data-line-end="89">signedPayloadは以下のように扱います</p>
+<pre><code class="has-line-data" data-line-start="90" data-line-end="101" class="language-javascript"><span class="hljs-comment">// v2 v2系では一度再構築しなおす必要があります</span>
 <span class="hljs-keyword">const</span> hash = Transaction.createTransactionHash(payload, [... Convert.hexToUint8(generationHash)])
 <span class="hljs-keyword">const</span> signed = TransactionMapping.createFromPayload(payload);
 <span class="hljs-keyword">const</span> signedTx = <span class="hljs-keyword">new</span> SignedTransaction(payload, hash, signed.signer?.publicKey!, signed.type, signed.type)
@@ -112,29 +113,29 @@
 <span class="hljs-keyword">const</span> d = <span class="hljs-built_in">JSON</span>.stringify(jsonObject);
 </code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="100" data-line-end="101">Note: ここでのoriginal_dataは送信時のhex_payloadです。</p>
+<p class="has-line-data" data-line-start="101" data-line-end="102">Note: ここでのoriginal_dataは送信時のhex_payloadです。</p>
 </blockquote>
-<h3 class="code-line" data-line-start="101" data-line-end="102"><a id="request_sign_utf8_101"></a>request_sign_utf8</h3>
-<p class="has-line-data" data-line-start="102" data-line-end="104">UTF8文字列に署名します<br>
+<h3 class="code-line" data-line-start="102" data-line-end="103"><a id="request_sign_utf8_102"></a>request_sign_utf8</h3>
+<p class="has-line-data" data-line-start="103" data-line-end="105">UTF8文字列に署名します<br>
 <code>alice://sign?type=request_sign_utf8&amp;data=hello,symbol!&amp;callback={callbackURL}</code></p>
-<p class="has-line-data" data-line-start="105" data-line-end="107">以下をCallbackURLに返します。<br>
+<p class="has-line-data" data-line-start="106" data-line-end="108">以下をCallbackURLに返します。<br>
 <code>{callbackUrl}?signature={signature}&amp;pubkey={publicKey}&amp;original_data={data}</code></p>
-<h3 class="code-line" data-line-start="108" data-line-end="109"><a id="request_sign_binary_hex_108"></a>request_sign_binary_hex</h3>
-<p class="has-line-data" data-line-start="109" data-line-end="110">バイナリデータに署名します</p>
-<pre><code class="has-line-data" data-line-start="111" data-line-end="116" class="language-javascript"><span class="hljs-comment">// v3</span>
+<h3 class="code-line" data-line-start="109" data-line-end="110"><a id="request_sign_binary_hex_109"></a>request_sign_binary_hex</h3>
+<p class="has-line-data" data-line-start="110" data-line-end="111">バイナリデータに署名します</p>
+<pre><code class="has-line-data" data-line-start="112" data-line-end="117" class="language-javascript"><span class="hljs-comment">// v3</span>
 <span class="hljs-keyword">const</span> data = symbolSdk.utils.uint8ToHex(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Uint8Array</span>([<span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>]))
 <span class="hljs-comment">// v2</span>
 <span class="hljs-keyword">const</span> data = Convert.uint8ToHex(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Uint8Array</span>([<span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>]))
 </code></pre>
-<p class="has-line-data" data-line-start="116" data-line-end="117"><code>alice://sign?type=request_sign_binary_hex&amp;data={data}&amp;callback={callbackURL}</code></p>
-<p class="has-line-data" data-line-start="118" data-line-end="120">以下をCallbackURLに返します。<br>
+<p class="has-line-data" data-line-start="117" data-line-end="118"><code>alice://sign?type=request_sign_binary_hex&amp;data={data}&amp;callback={callbackURL}</code></p>
+<p class="has-line-data" data-line-start="119" data-line-end="121">以下をCallbackURLに返します。<br>
 <code>{callbackUrl}?signature={signature}&amp;pubkey={publicKey}&amp;original_data={data}</code></p>
-<h3 class="code-line" data-line-start="121" data-line-end="122"><a id="request_sign_batches_121"></a>request_sign_batches</h3>
-<p class="has-line-data" data-line-start="122" data-line-end="126">複数のInnerTransactionに全て署名します。<br>
+<h3 class="code-line" data-line-start="122" data-line-end="123"><a id="request_sign_batches_122"></a>request_sign_batches</h3>
+<p class="has-line-data" data-line-start="123" data-line-end="127">複数のInnerTransactionに全て署名します。<br>
 今の所Metal用です。<br>
 以下のようにtxsの16進数文字列をbatchクエリに追加してください。<br>
 データ数が大きくなることが想定されます。<code>&amp;method=post</code>にしてください。URLが長すぎると画面遷移できません。</p>
-<pre><code class="has-line-data" data-line-start="127" data-line-end="142" class="language-javascript"><span class="hljs-keyword">import</span> {MetalService} <span class="hljs-keyword">from</span> <span class="hljs-string">"metal-on-symbol"</span>;
+<pre><code class="has-line-data" data-line-start="128" data-line-end="143" class="language-javascript"><span class="hljs-keyword">import</span> {MetalService} <span class="hljs-keyword">from</span> <span class="hljs-string">"metal-on-symbol"</span>;
 <span class="hljs-keyword">const</span> { txs, key, additive } = <span class="hljs-keyword">await</span> metalService.createForgeTxs(
     type, 
     sourcePubAccount,
@@ -149,8 +150,8 @@
   url += <span class="hljs-string">`&amp;batch<span class="hljs-subst">${i}</span>=<span class="hljs-subst">${tx.serialize()}</span>`</span>
 }
 </code></pre>
-<p class="has-line-data" data-line-start="142" data-line-end="143">以下のようなJSONをBodyに含め送信します</p>
-<pre><code class="has-line-data" data-line-start="145" data-line-end="153" class="language-javascript">{
+<p class="has-line-data" data-line-start="143" data-line-end="144">以下のようなJSONをBodyに含め送信します</p>
+<pre><code class="has-line-data" data-line-start="146" data-line-end="154" class="language-javascript">{
     <span class="hljs-string">"pubkey"</span>: <span class="hljs-string">"PUBLIC_KEY"</span>,
     <span class="hljs-string">"signed0"</span>: <span class="hljs-string">"SIGNED_PAYLOAD_0"</span>,
     <span class="hljs-string">"signed1"</span>: <span class="hljs-string">"SIGNED_PAYLOAD_1"</span>,
@@ -158,15 +159,15 @@
     ...
 }
 </code></pre>
-<h3 class="code-line" data-line-start="154" data-line-end="155"><a id="request_pubkey_154"></a>request_pubkey</h3>
-<p class="has-line-data" data-line-start="155" data-line-end="156">ユーザが - aLice - のメインに設定しているアカウントの公開鍵(string)を返します。</p>
-<h3 class="code-line" data-line-start="157" data-line-end="158"><a id="_157"></a>エラーについて</h3>
-<p class="has-line-data" data-line-start="158" data-line-end="159">ユーザが署名を拒否すると以下を返します</p>
-<p class="has-line-data" data-line-start="160" data-line-end="161"><code>{callback}?error=sign_rejected</code></p>
-<h3 class="code-line" data-line-start="162" data-line-end="163"><a id="_162"></a>署名の検証について</h3>
-<h4 class="code-line" data-line-start="164" data-line-end="165"><a id="_164"></a>トランザクションの検証</h4>
-<p class="has-line-data" data-line-start="165" data-line-end="166">v3系の場合</p>
-<pre><code class="has-line-data" data-line-start="167" data-line-end="175" class="language-javascript"><span class="hljs-comment">// 返ってきた公開鍵とトランザクションの公開鍵が一致するかどうか</span>
+<h3 class="code-line" data-line-start="155" data-line-end="156"><a id="request_pubkey_155"></a>request_pubkey</h3>
+<p class="has-line-data" data-line-start="156" data-line-end="157">ユーザが - aLice - のメインに設定しているアカウントの公開鍵(string)を返します。</p>
+<h3 class="code-line" data-line-start="158" data-line-end="159"><a id="_158"></a>エラーについて</h3>
+<p class="has-line-data" data-line-start="159" data-line-end="160">ユーザが署名を拒否すると以下を返します</p>
+<p class="has-line-data" data-line-start="161" data-line-end="162"><code>{callback}?error=sign_rejected</code></p>
+<h3 class="code-line" data-line-start="163" data-line-end="164"><a id="_163"></a>署名の検証について</h3>
+<h4 class="code-line" data-line-start="165" data-line-end="166"><a id="_165"></a>トランザクションの検証</h4>
+<p class="has-line-data" data-line-start="166" data-line-end="167">v3系の場合</p>
+<pre><code class="has-line-data" data-line-start="168" data-line-end="176" class="language-javascript"><span class="hljs-comment">// 返ってきた公開鍵とトランザクションの公開鍵が一致するかどうか</span>
 <span class="hljs-keyword">const</span> publicKey = <span class="hljs-keyword">new</span> symbolSdk.PublicKey(<span class="hljs-string">"PUBLIC_KEY"</span>);
 <span class="hljs-keyword">const</span> tx = symbolSdk.symbol.TransactionFactory.deserialize(symbolSdk.utils.hexToUint8(payload));
 <span class="hljs-built_in">console</span>.log(symbolSdk.utils.uint8ToHex(tx.signerPublicKey.bytes) == symbolSdk.utils.uint8ToHex(publicKey.bytes));
@@ -174,9 +175,9 @@
 <span class="hljs-comment">// トランザクションの検証</span>
 <span class="hljs-built_in">console</span>.log(facade.verifyTransaction(tx, tx.signature));
 </code></pre>
-<h4 class="code-line" data-line-start="176" data-line-end="177"><a id="_176"></a>その他署名の検証</h4>
-<p class="has-line-data" data-line-start="177" data-line-end="178">v3系の場合</p>
-<pre><code class="has-line-data" data-line-start="179" data-line-end="183" class="language-javascript"><span class="hljs-keyword">const</span> publicKey = <span class="hljs-keyword">new</span> symbolSdk.PublicKey(<span class="hljs-string">"PUBLIC_KEY"</span>);
+<h4 class="code-line" data-line-start="177" data-line-end="178"><a id="_177"></a>その他署名の検証</h4>
+<p class="has-line-data" data-line-start="178" data-line-end="179">v3系の場合</p>
+<pre><code class="has-line-data" data-line-start="180" data-line-end="184" class="language-javascript"><span class="hljs-keyword">const</span> publicKey = <span class="hljs-keyword">new</span> symbolSdk.PublicKey(<span class="hljs-string">"PUBLIC_KEY"</span>);
 <span class="hljs-keyword">const</span> verifier = <span class="hljs-keyword">new</span> facade.constructor.Verifier(publicKey);
 <span class="hljs-built_in">console</span>.log(verifier.verify(original_data, signature));
 </code></pre>
